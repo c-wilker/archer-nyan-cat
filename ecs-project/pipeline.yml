@@ -16,12 +16,10 @@ source:
   properties:
     access_token_secret: github-token-nyan-cat-project-archer-nyan-cat
     branch: master
-    repository: nathanpeck/archer-nyan-cat
+    repository: https://github.com/c-wilker/archer-nyan-cat
 
 # The deployment section defines the order the pipeline will deploy
 # to your environments.
 stages:
-    -
-      # The name of the environment to deploy to.
+    - # The name of the environment to deploy to.
       name: test
-
