@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   aws-code-deploy: circleci/aws-code-deploy@0.0.10
+  aws-cli: circleci/aws-cli@0.1.6
 jobs:
   push-app:
     executor: aws-cli/default
