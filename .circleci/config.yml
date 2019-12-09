@@ -1,12 +1,16 @@
 version: 2.1
 orbs:
   aws-code-deploy: circleci/aws-code-deploy@0.0.10
-workflows:
-  deploy_application:
-    jobs:
-      - aws-code-deploy/deploy:
+jobs:
+  push-app:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/install
+      - aws-cli/configure
+      - aws-code-deploy/push-bundle:
           application-name: nyan_cat
-          deployment-group: nyan_cat_test
-          service-role-arn: arn:aws:iam::052022529802:role/CodeDeployServiceRole
+          bundle-source: .
           bundle-bucket: cw-nyancat-demo-bucket
           bundle-key: nyan_cat
+          bundle-type: zip
