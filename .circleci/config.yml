@@ -15,6 +15,7 @@ jobs:
           bundle-bucket: cw-nyancat-demo-bucket
           bundle-key: nyan_cat
           bundle-type: zip
+          arguments: '--ignore-hidden-files'
 workflows:
   nyan-deploy:
     jobs:
