@@ -16,7 +16,27 @@ jobs:
           bundle-key: nyan_cat
           bundle-type: zip
           arguments: '--ignore-hidden-files'
+  deploy-app:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/install
+      - aws-cli/configure
+      - aws-code-deploy/deploy-bundle:
+          application-name: nyan_cat
+          deployment-group: nyan_cat_test
+          deployment-config: CodeDeployDefault.OneAtATime
+          bundle-bucket: cw-nyancat-demo-bucket
+          bundle-key: nyan_cat
+          bundle-type: zip
 workflows:
   nyan-deploy:
     jobs:
       - push-app
+      - hold:
+          type: approval
+          requires:
+          - push-app
+      - deploy-app:
+          requires:
+          - hold
