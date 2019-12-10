@@ -1,12 +1,42 @@
 version: 2.1
 orbs:
   aws-code-deploy: circleci/aws-code-deploy@0.0.10
-workflows:
-  deploy_application:
-    jobs:
-      - aws-code-deploy/deploy:
+  aws-cli: circleci/aws-cli@0.1.6
+jobs:
+  push-app:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/install
+      - aws-cli/configure
+      - aws-code-deploy/push-bundle:
+          application-name: nyan_cat
+          bundle-source: .
+          bundle-bucket: cw-nyancat-demo-bucket
+          bundle-key: nyan_cat-$CIRCLE_SHA1
+          bundle-type: zip
+          arguments: '--ignore-hidden-files'
+  deploy-app:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/install
+      - aws-cli/configure
+      - aws-code-deploy/deploy-bundle:
           application-name: nyan_cat
           deployment-group: nyan_cat_test
-          service-role-arn: arn:aws:iam::052022529802:role/CodeDeployServiceRole
+          deployment-config: CodeDeployDefault.OneAtATime
           bundle-bucket: cw-nyancat-demo-bucket
-          bundle-key: nyan_cat
+          bundle-key: nyan_cat-$CIRCLE_SHA1
+          bundle-type: zip
+workflows:
+  nyan-deploy:
+    jobs:
+      - push-app
+      - hold:
+          type: approval
+          requires:
+          - push-app
+      - deploy-app:
+          requires:
+          - hold
