@@ -9,4 +9,4 @@ workflows:
           deployment-group: nyan_cat_test
           service-role-arn: arn:aws:iam::052022529802:role/CodeDeployServiceRole
           bundle-bucket: cw-nyancat-demo-bucket
-          bundle-key: nyan_cat
+          bundle-key: nyan_cat-$CIRCLE_SHA1
